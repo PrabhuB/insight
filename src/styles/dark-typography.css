@@ -4,10 +4,15 @@
 
 @layer base {
   /* Dark theme typography refinements */
+  .dark body {
+    font-family: theme("fontFamily.sans");
+    letter-spacing: 0.02em;
+  }
+
   .dark h1,
   .dark h2,
   .dark h3 {
-    letter-spacing: 0.04em;
+    letter-spacing: 0.08em;
   }
 
   .dark table td,
