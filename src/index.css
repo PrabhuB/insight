@@ -86,72 +86,71 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Deep charcoal base for Dark theme (not pure black) */
-    --background: 0 0% 7%;
-    --foreground: 0 0% 88%;
+    /* Deep navy base for Dark theme */
+    --background: 220 45% 6%;
+    --foreground: 210 25% 90%;
 
-    /* Dark mode surfaces: layered charcoals with soft elevation */
-    /* Cards sit ~4–6% lighter than the base background for subtle elevation */
-    --card: 0 0% 11%;
-    --card-foreground: 0 0% 88%;
+    /* Dark mode surfaces: layered navies with subtle glass depth */
+    --card: 222 40% 10%;
+    --card-foreground: 210 25% 92%;
 
-    --popover: 0 0% 11%;
-    --popover-foreground: 0 0% 88%;
+    --popover: 222 40% 9%;
+    --popover-foreground: 210 25% 92%;
 
-    /* Desaturated, softer primaries for a premium feel */
-    --primary: 222 60% 56%;
-    --primary-foreground: 0 0% 7%;
+    /* Palette: deep navy base, soft teal accents, gold highlights */
+    --primary: 172 55% 46%; /* soft teal */
+    --primary-foreground: 220 60% 7%;
 
-    --secondary: 0 0% 16%;
-    --secondary-foreground: 0 0% 90%;
+    --secondary: 222 32% 14%;
+    --secondary-foreground: 210 25% 92%;
 
-    --muted: 0 0% 16%;
-    --muted-foreground: 0 0% 62%;
+    --muted: 222 28% 16%;
+    --muted-foreground: 215 16% 68%;
 
-    --accent: 222 60% 56%;
-    --accent-foreground: 0 0% 7%;
+    --accent: 43 90% 55%; /* warm gold accent */
+    --accent-foreground: 220 60% 7%;
 
-    --destructive: 0 60% 58%;
-    --destructive-foreground: 0 0% 96%;
+    --destructive: 0 72% 60%;
+    --destructive-foreground: 0 0% 100%;
 
     /* Very soft separators for dark glass surfaces */
-    --border: 0 0% 100% / 0.07;
-    --input: 0 0% 100% / 0.09;
-    --ring: 222 60% 56% / 0.45;
+    --border: 220 35% 30% / 0.5;
+    --input: 220 35% 26% / 0.8;
+    --ring: 172 70% 50% / 0.9;
 
-    --success: 142 55% 42%;
-    --success-foreground: 0 0% 7%;
+    --success: 152 58% 44%;
+    --success-foreground: 220 60% 7%;
 
-    --warning: 38 70% 54%;
-    --warning-foreground: 0 0% 7%;
+    --warning: 43 90% 55%;
+    --warning-foreground: 220 60% 7%;
 
-    --sidebar-background: 0 0% 6% / 0.96;
-    --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 222 60% 56%;
-    --sidebar-primary-foreground: 0 0% 7%;
-    --sidebar-accent: 0 0% 14%;
-    --sidebar-accent-foreground: 0 0% 90%;
-    --sidebar-border: 0 0% 100% / 0.07;
-    --sidebar-ring: 222 60% 56% / 0.45;
+    --sidebar-background: 222 40% 7% / 0.96;
+    --sidebar-foreground: 210 25% 92%;
+    --sidebar-primary: 172 55% 46%;
+    --sidebar-primary-foreground: 220 60% 7%;
+    --sidebar-accent: 222 34% 12%;
+    --sidebar-accent-foreground: 210 25% 92%;
+    --sidebar-border: 220 35% 30% / 0.5;
+    --sidebar-ring: 172 70% 50% / 0.9;
 
-    /* Charts tuned for dark finance dashboards with softer colors */
-    --chart-1: 222 60% 56%;
-    --chart-2: 160 60% 39%;
-    --chart-3: 45 70% 51%;
-    --chart-4: 291 50% 46%;
-    --chart-5: 17 68% 55%;
+    /* Charts tuned for dark finance dashboards */
+    --chart-1: 172 60% 48%; /* teal */
+    --chart-2: 43 90% 55%;  /* gold */
+    --chart-3: 204 80% 60%; /* cyan highlight */
+    --chart-4: 291 50% 52%;
+    --chart-5: 10 80% 60%;
 
-    --sidebar: 0 0% 7% / 0.96;
+    --sidebar: 222 40% 7% / 0.96;
 
-    /* Soft, finance-style shadows for dark surfaces */
-    --shadow-2xs: 0 8px 18px hsl(222 60% 56% / 0.16);
-    --shadow-xs: 0 12px 26px hsl(222 60% 56% / 0.18);
-    --shadow-sm: 0 18px 38px hsl(222 60% 56% / 0.22);
-    --shadow: 0 24px 52px hsl(222 60% 56% / 0.26);
-    --shadow-md: 0 30px 70px hsl(222 60% 56% / 0.3);
-    --shadow-lg: 0 40px 95px hsl(222 60% 56% / 0.34);
-    --shadow-xl: 0 52px 130px hsl(222 60% 56% / 0.38);
-    --shadow-2xl: 0 70px 170px hsl(222 60% 56% / 0.42);
+    /* Soft, atmospheric shadows for glassy dark surfaces */
+    --shadow-2xs: 0 10px 20px hsl(220 60% 10% / 0.45);
+    --shadow-xs: 0 16px 30px hsl(220 60% 10% / 0.5);
+    --shadow-sm: 0 22px 40px hsl(220 60% 10% / 0.55);
+    --shadow: 0 28px 52px hsl(220 60% 10% / 0.6);
+    --shadow-md: 0 36px 70px hsl(220 60% 10% / 0.65);
+    --shadow-lg: 0 44px 90px hsl(220 60% 10% / 0.7);
+    --shadow-xl: 0 56px 120px hsl(220 60% 10% / 0.75);
+    --shadow-2xl: 0 72px 170px hsl(220 60% 10% / 0.8);
   }
 
   .amoled {
@@ -262,28 +261,28 @@ All colors MUST be HSL.
     @apply rounded-full border border-border/40 bg-card/80 backdrop-blur-2xl shadow-md px-1 py-1;
   }
 
-  /* Dark theme: elevated finance-style surfaces without harsh borders */
+  /* Dark theme: elevated glass surfaces with navy, teal & gold lighting */
   .dark .glass-surface {
     box-shadow: var(--shadow-md);
     background-image:
-      radial-gradient(circle at 0% 0%, hsl(222 60% 56% / 0.14), transparent 55%),
-      radial-gradient(circle at 100% 100%, hsl(160 60% 39% / 0.12), transparent 55%),
-      linear-gradient(to bottom right, hsl(0 0% 13%), hsl(0 0% 8%));
-    border-color: hsl(0 0% 100% / 0.07);
+      radial-gradient(circle at 0% 0%, hsl(172 70% 32% / 0.3), transparent 55%),
+      radial-gradient(circle at 100% 100%, hsl(204 80% 40% / 0.22), transparent 55%),
+      linear-gradient(to bottom right, hsl(220 45% 10%), hsl(220 40% 6%));
+    border-color: hsl(190 40% 80% / 0.16);
   }
 
   .dark .glass-header {
     box-shadow: var(--shadow-sm);
     background-image:
-      radial-gradient(circle at 0% 0%, hsl(222 60% 56% / 0.16), transparent 55%),
-      linear-gradient(to bottom right, hsl(0 0% 12%), hsl(0 0% 7%));
-    border-color: hsl(0 0% 100% / 0.07);
+      radial-gradient(circle at 0% 0%, hsl(43 95% 62% / 0.32), transparent 55%),
+      linear-gradient(to bottom right, hsl(220 48% 10%), hsl(220 40% 7%));
+    border-color: hsl(43 95% 72% / 0.25);
   }
 
   .dark .glass-tabs {
     box-shadow: var(--shadow-xs);
-    background-image: linear-gradient(to bottom right, hsl(0 0% 12%), hsl(0 0% 8%));
-    border-color: hsl(0 0% 100% / 0.08);
+    background-image: linear-gradient(to bottom right, hsl(222 40% 12%), hsl(220 40% 8%));
+    border-color: hsl(190 40% 80% / 0.14);
   }
 
   /* AMOLED mode: turn off blur and rely on solid blacks + subtle contrast */
@@ -315,5 +314,22 @@ All colors MUST be HSL.
       );
     background-size: 32px 32px;
     background-position: 0 0;
+  }
+
+  /* Interactive animation utilities */
+  .story-link {
+    @apply relative inline-block after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left;
+  }
+
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-105;
+  }
+
+  .pulse {
+    @apply animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite];
+  }
+
+  .chart-fill {
+    @apply origin-bottom animate-chart-fill;
   }
 }

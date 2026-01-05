@@ -27,7 +27,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "relative inline-flex min-h-[44px] flex-col items-center justify-center gap-1 px-2.5 md:px-3.5 py-2 text-xs md:text-sm font-medium text-muted-foreground transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=active]:text-primary after:pointer-events-none after:absolute after:inset-x-1 after:bottom-1 after:h-[2px] after:rounded-full after:bg-primary/0 after:transition-all after:duration-200 hover:text-foreground hover:after:bg-primary/15 data-[state=active]:after:bg-primary data-[state=active]:after:shadow-[0_0_10px_hsl(var(--primary)/0.6)] dark:data-[state=active]:shadow-[0_0_0_1px_hsl(var(--primary)/0.4),0_0_22px_hsl(var(--primary)/0.7)]",
+      "relative inline-flex min-h-[44px] flex-col items-center justify-center gap-1 px-2.5 md:px-3.5 py-2 text-xs md:text-sm font-medium text-muted-foreground transition-colors duration-150 outline-none data-[state=active]:text-primary after:pointer-events-none after:absolute after:inset-x-1 after:bottom-1 after:h-[2px] after:rounded-full after:bg-primary/0 after:transition-all after:duration-200 hover:text-foreground hover:after:bg-primary/15 data-[state=active]:after:bg-primary data-[state=active]:after:shadow-[0_0_14px_hsl(var(--primary)/0.9)] dark:data-[state=active]:after:shadow-[0_0_18px_hsl(var(--accent)/0.9)]",
       className,
     )}
     {...props}
