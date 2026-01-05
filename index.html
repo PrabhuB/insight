@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Salary Tracker India</title>
+    <meta name="description" content="Track your salary, analyze earnings, monitor deductions with detailed visualizations and charts" />
+    <meta name="author" content="Income Tax Planner" />
+    <meta name="theme-color" content="#1e40af" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Salary Tracker" />
+    <link rel="icon" href="/salary-tracker-icon-512.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/salary-tracker-icon-512.png" />
+ 
+    <meta property="og:title" content="Salary Tracker India" />
+    <meta property="og:description" content="Track your salary with detailed visualizations" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Lovable" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("salary-theme");
+          var theme = stored === "dark" || stored === "amoled" || stored === "light" ? stored : "amoled";
+          if (!stored) {
+            localStorage.setItem("salary-theme", theme);
+          }
+          var root = document.documentElement;
+          root.classList.remove("dark", "amoled");
+          if (theme === "dark" || theme === "amoled") {
+            root.classList.add(theme);
+          }
+        } catch (e) {
+          document.documentElement.classList.add("amoled");
+        }
+      })();
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

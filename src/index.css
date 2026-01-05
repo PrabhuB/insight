@@ -1,0 +1,319 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Light theme: airy liquid glass aesthetic */
+    --background: 210 40% 97%; /* subtle cool-gray off white */
+    /* Light theme foregrounds tuned for high readability on glass */
+    --foreground: 222 47% 12%; /* deep navy/charcoal for headings */
+
+    /* Glassmorphism surface tokens - light mode */
+    --card: 0 0% 100%; /* crisp white cards on off-white bg */
+    --card-foreground: 222 47% 12%;
+
+    --popover: 0 0% 100% / 0.96;
+    --popover-foreground: 222 47% 14%;
+
+    --primary: 222 84% 56%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 98%;
+    --secondary-foreground: 222 47% 14%;
+
+    --muted: 210 40% 97%;
+    --muted-foreground: 215 16% 50%; /* ~60% opacity gray for labels/subtext */
+
+    --accent: 222 84% 56%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Soft, low-contrast borders for glass – avoid harsh lines */
+    --border: 210 40% 94% / 0.45;
+    --input: 210 40% 94% / 0.75;
+    --ring: 222 84% 56% / 0.25;
+
+    --radius: 1rem; /* 16px: consistent, generous rounding */
+
+    --success: 142 72% 35%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --sidebar-background: 210 40% 98% / 0.9;
+    --sidebar-foreground: 222 47% 14%;
+    --sidebar-primary: 222 84% 56%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 210 40% 97%;
+    --sidebar-accent-foreground: 222 47% 14%;
+    --sidebar-border: 210 40% 94% / 0.45;
+    --sidebar-ring: 222 84% 56% / 0.25;
+
+    --chart-1: 222 84% 56%;
+    --chart-2: 160 84% 39%;
+    --chart-3: 45 100% 51%;
+    --chart-4: 291 64% 42%;
+    --chart-5: 17 88% 55%;
+
+    --sidebar: 210 40% 98% / 0.9;
+    --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+    /* Soft depth shadows tuned for glass surfaces */
+    --shadow-2xs: 0 6px 14px hsl(222 84% 56% / 0.04);
+    --shadow-xs: 0 10px 22px hsl(222 84% 56% / 0.06);
+    --shadow-sm: 0 18px 32px hsl(222 84% 56% / 0.08);
+    --shadow: 0 24px 46px hsl(222 84% 56% / 0.1);
+    --shadow-md: 0 30px 64px hsl(222 84% 56% / 0.12);
+    --shadow-lg: 0 40px 84px hsl(222 84% 56% / 0.14);
+    --shadow-xl: 0 52px 112px hsl(222 84% 56% / 0.16);
+    --shadow-2xl: 0 68px 150px hsl(222 84% 56% / 0.18);
+
+    --tracking-normal: 0.02em;
+    --spacing: 0.25rem;
+  }
+
+  .dark {
+    /* Deep charcoal base for Dark theme (not pure black) */
+    --background: 0 0% 7%;
+    --foreground: 0 0% 88%;
+
+    /* Dark mode surfaces: layered charcoals with soft elevation */
+    /* Cards sit ~4–6% lighter than the base background for subtle elevation */
+    --card: 0 0% 11%;
+    --card-foreground: 0 0% 88%;
+
+    --popover: 0 0% 11%;
+    --popover-foreground: 0 0% 88%;
+
+    /* Desaturated, softer primaries for a premium feel */
+    --primary: 222 60% 56%;
+    --primary-foreground: 0 0% 7%;
+
+    --secondary: 0 0% 16%;
+    --secondary-foreground: 0 0% 90%;
+
+    --muted: 0 0% 16%;
+    --muted-foreground: 0 0% 62%;
+
+    --accent: 222 60% 56%;
+    --accent-foreground: 0 0% 7%;
+
+    --destructive: 0 60% 58%;
+    --destructive-foreground: 0 0% 96%;
+
+    /* Very soft separators for dark glass surfaces */
+    --border: 0 0% 100% / 0.07;
+    --input: 0 0% 100% / 0.09;
+    --ring: 222 60% 56% / 0.45;
+
+    --success: 142 55% 42%;
+    --success-foreground: 0 0% 7%;
+
+    --warning: 38 70% 54%;
+    --warning-foreground: 0 0% 7%;
+
+    --sidebar-background: 0 0% 6% / 0.96;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 222 60% 56%;
+    --sidebar-primary-foreground: 0 0% 7%;
+    --sidebar-accent: 0 0% 14%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 0 0% 100% / 0.07;
+    --sidebar-ring: 222 60% 56% / 0.45;
+
+    /* Charts tuned for dark finance dashboards with softer colors */
+    --chart-1: 222 60% 56%;
+    --chart-2: 160 60% 39%;
+    --chart-3: 45 70% 51%;
+    --chart-4: 291 50% 46%;
+    --chart-5: 17 68% 55%;
+
+    --sidebar: 0 0% 7% / 0.96;
+
+    /* Soft, finance-style shadows for dark surfaces */
+    --shadow-2xs: 0 8px 18px hsl(222 60% 56% / 0.16);
+    --shadow-xs: 0 12px 26px hsl(222 60% 56% / 0.18);
+    --shadow-sm: 0 18px 38px hsl(222 60% 56% / 0.22);
+    --shadow: 0 24px 52px hsl(222 60% 56% / 0.26);
+    --shadow-md: 0 30px 70px hsl(222 60% 56% / 0.3);
+    --shadow-lg: 0 40px 95px hsl(222 60% 56% / 0.34);
+    --shadow-xl: 0 52px 130px hsl(222 60% 56% / 0.38);
+    --shadow-2xl: 0 70px 170px hsl(222 60% 56% / 0.42);
+  }
+
+  .amoled {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 96%;
+
+    /* AMOLED mode: solid blacks with subtle elevation, no heavy blur */
+    --card: 0 0% 6%;
+    --card-foreground: 0 0% 96%;
+
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 96%;
+
+    --primary: 210 100% 60%;
+    --primary-foreground: 0 0% 0%;
+
+    --secondary: 0 0% 7%;
+    --secondary-foreground: 0 0% 93%;
+
+    --muted: 0 0% 7%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 210 100% 60%;
+    --accent-foreground: 0 0% 0%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 100% / 0.16;
+    --input: 0 0% 12%;
+    --ring: 210 100% 60% / 0.5;
+
+    --success: 142 76% 45%;
+    --success-foreground: 0 0% 0%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
+
+    --sidebar-background: 0 0% 0%;
+    --sidebar-foreground: 0 0% 93%;
+    --sidebar-primary: 210 100% 60%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 7%;
+    --sidebar-accent-foreground: 0 0% 93%;
+    --sidebar-border: 0 0% 100% / 0.18;
+    --sidebar-ring: 210 100% 60% / 0.5;
+
+    --chart-1: 210 100% 60%;
+    --chart-2: 142 76% 45%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 291 64% 42%;
+    --chart-5: 17 88% 55%;
+
+    --sidebar: 0 0% 0%;
+
+    /* Disable heavy shadows; rely on brightness contrast for elevation */
+    --shadow-2xs: 0 0 0 hsl(0 0% 0% / 0);
+    --shadow-xs: 0 0 0 hsl(0 0% 0% / 0);
+    --shadow-sm: 0 0 0 hsl(0 0% 0% / 0);
+    --shadow: 0 0 0 hsl(0 0% 0% / 0);
+    --shadow-md: 0 0 0 hsl(0 0% 0% / 0);
+    --shadow-lg: 0 0 0 hsl(0 0% 0% / 0);
+    --shadow-xl: 0 0 0 hsl(0 0% 0% / 0);
+    --shadow-2xl: 0 0 0 hsl(0 0% 0% / 0);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply min-h-screen bg-background text-foreground antialiased;
+    /* Light theme: layered liquid glass background */
+    background-image:
+      radial-gradient(circle at 0% 0%, hsl(222 84% 56% / 0.09), transparent 55%),
+      radial-gradient(circle at 100% 0%, hsl(160 84% 39% / 0.06), transparent 55%),
+      radial-gradient(circle at 0% 100%, hsl(45 100% 72% / 0.04), transparent 55%),
+      linear-gradient(to bottom right, hsl(222 47% 99%), hsl(222 47% 96%));
+    background-attachment: fixed;
+  }
+
+  .dark body {
+    background-image:
+      radial-gradient(circle at 0% 0%, hsl(222 60% 56% / 0.18), transparent 55%),
+      radial-gradient(circle at 100% 100%, hsl(160 60% 39% / 0.12), transparent 55%),
+      linear-gradient(to bottom right, hsl(0 0% 9%), hsl(0 0% 5%));
+  }
+
+  .amoled body {
+    @apply bg-background text-foreground;
+    background-image: none;
+    background-attachment: scroll;
+  }
+}
+
+@layer components {
+  .glass-surface {
+    @apply rounded-2xl border border-border/60 bg-card/95 backdrop-blur-2xl shadow-md transition-all duration-300 ease-out;
+  }
+
+  .glass-header {
+    @apply border-b border-border/40 bg-card/80 backdrop-blur-2xl shadow-md;
+  }
+
+  .glass-tabs {
+    @apply rounded-full border border-border/40 bg-card/80 backdrop-blur-2xl shadow-md px-1 py-1;
+  }
+
+  /* Dark theme: elevated finance-style surfaces without harsh borders */
+  .dark .glass-surface {
+    box-shadow: var(--shadow-md);
+    background-image:
+      radial-gradient(circle at 0% 0%, hsl(222 60% 56% / 0.14), transparent 55%),
+      radial-gradient(circle at 100% 100%, hsl(160 60% 39% / 0.12), transparent 55%),
+      linear-gradient(to bottom right, hsl(0 0% 13%), hsl(0 0% 8%));
+    border-color: hsl(0 0% 100% / 0.07);
+  }
+
+  .dark .glass-header {
+    box-shadow: var(--shadow-sm);
+    background-image:
+      radial-gradient(circle at 0% 0%, hsl(222 60% 56% / 0.16), transparent 55%),
+      linear-gradient(to bottom right, hsl(0 0% 12%), hsl(0 0% 7%));
+    border-color: hsl(0 0% 100% / 0.07);
+  }
+
+  .dark .glass-tabs {
+    box-shadow: var(--shadow-xs);
+    background-image: linear-gradient(to bottom right, hsl(0 0% 12%), hsl(0 0% 8%));
+    border-color: hsl(0 0% 100% / 0.08);
+  }
+
+  /* AMOLED mode: turn off blur and rely on solid blacks + subtle contrast */
+  .amoled .glass-surface {
+    @apply bg-card shadow-none backdrop-blur-none border-border/60;
+  }
+
+  .amoled .glass-header {
+    @apply bg-card shadow-none backdrop-blur-none border-border/60;
+  }
+
+  .amoled .glass-tabs {
+    @apply bg-card shadow-none backdrop-blur-none border-border/60;
+  }
+}
+
+@layer utilities {
+  .payslip-bg {
+    background-image:
+      linear-gradient(
+        to right,
+        hsl(var(--border)) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        hsl(var(--border)) 1px,
+        transparent 1px
+      );
+    background-size: 32px 32px;
+    background-position: 0 0;
+  }
+}
