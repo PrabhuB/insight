@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   AlertDialog,
@@ -1406,7 +1407,7 @@ export const BulkImport = () => {
           <div className="flex flex-col sm:flex-row sm:items-center gap-3">
             <Button
               type="button"
-              className="w-full sm:w-auto text-xs sm:text-sm"
+              className="w-full sm:w-auto text-xs sm:text-sm sticky top-2 z-10 sm:static"
               onClick={async () => {
                 try {
                   const headers = [
@@ -1460,70 +1461,154 @@ export const BulkImport = () => {
             </p>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="space-y-2">
-              <h4 className="font-semibold text-xs sm:text-sm">How to fill the template</h4>
-              <ul className="list-disc pl-4 space-y-1 text-muted-foreground">
-                <li>
-                  <span className="font-medium">Sheet name</span>: use your organisation name (e.g. TCS, RBS).
-                </li>
-                <li>
-                  <span className="font-medium">Month Year</span>: in the first column (e.g. JAN 2025, FEB 2025).
-                </li>
-                <li>
-                  <span className="font-medium">Earnings columns</span>: add columns like Basic Salary, HRA,
-                  Bonus, etc. Positive amounts only.
-                </li>
-                <li>
-                  <span className="font-medium">Deduction columns</span>: add columns like Income Tax,
-                  Provident Fund, Insurance, etc. Positive amounts only.
-                </li>
-                <li>
-                  <span className="font-medium">Totals</span>: the last three columns are calculated by you in
-                  Excel (Total Earnings, Total Deductions, Net Pay).
-                </li>
-              </ul>
+          <div className="space-y-3">
+            {/* Mobile: accordions + swipeable sample cards */}
+            <div className="sm:hidden space-y-2">
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="how-to">
+                  <AccordionTrigger className="text-xs font-semibold">
+                    How to fill the template
+                  </AccordionTrigger>
+                  <AccordionContent className="text-xs text-muted-foreground">
+                    <ul className="list-disc pl-4 space-y-1">
+                      <li>
+                        <span className="font-medium">Sheet name</span>: use your organisation name (e.g. TCS, RBS).
+                      </li>
+                      <li>
+                        <span className="font-medium">Month Year</span>: in the first column (e.g. JAN 2025, FEB 2025).
+                      </li>
+                      <li>
+                        <span className="font-medium">Earnings columns</span>: add columns like Basic Salary, HRA,
+                        Bonus, etc. Positive amounts only.
+                      </li>
+                      <li>
+                        <span className="font-medium">Deduction columns</span>: add columns like Income Tax,
+                        Provident Fund, Insurance, etc. Positive amounts only.
+                      </li>
+                      <li>
+                        <span className="font-medium">Totals</span>: the last three columns are calculated by you in
+                        Excel (Total Earnings, Total Deductions, Net Pay).
+                      </li>
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="sample-row">
+                  <AccordionTrigger className="text-xs font-semibold">
+                    Sample row (for reference)
+                  </AccordionTrigger>
+                  <AccordionContent className="space-y-3 text-xs">
+                    <p className="text-[11px] text-muted-foreground">
+                      Swipe left or right to view all salary columns.
+                    </p>
+                    <div className="flex gap-3 overflow-x-auto pb-1 -mx-2 px-2">
+                      <div className="flex-shrink-0 min-w-[180px] rounded-lg border bg-background/40 px-3 py-2">
+                        <p className="text-[11px] font-medium mb-1">Month &amp; basics</p>
+                        <div className="space-y-0.5">
+                          <p className="text-[11px] text-muted-foreground">Month Year</p>
+                          <p className="text-xs">JAN 2025</p>
+                          <p className="text-[11px] text-muted-foreground mt-1">Basic Salary</p>
+                          <p className="text-xs">80,000</p>
+                          <p className="text-[11px] text-muted-foreground mt-1">HRA</p>
+                          <p className="text-xs">32,000</p>
+                        </div>
+                      </div>
+
+                      <div className="flex-shrink-0 min-w-[180px] rounded-lg border bg-background/40 px-3 py-2">
+                        <p className="text-[11px] font-medium mb-1">Adjustments</p>
+                        <div className="space-y-0.5">
+                          <p className="text-[11px] text-muted-foreground">Bonus</p>
+                          <p className="text-xs">10,000</p>
+                          <p className="text-[11px] text-muted-foreground mt-1">Income Tax</p>
+                          <p className="text-xs">18,000</p>
+                          <p className="text-[11px] text-muted-foreground mt-1">Provident Fund</p>
+                          <p className="text-xs">9,600</p>
+                        </div>
+                      </div>
+
+                      <div className="flex-shrink-0 min-w-[180px] rounded-lg border bg-background/40 px-3 py-2">
+                        <p className="text-[11px] font-medium mb-1">Totals</p>
+                        <div className="space-y-0.5">
+                          <p className="text-[11px] text-muted-foreground">Total Earnings</p>
+                          <p className="text-xs">1,22,000</p>
+                          <p className="text-[11px] text-muted-foreground mt-1">Total Deductions</p>
+                          <p className="text-xs">27,600</p>
+                          <p className="text-[11px] text-muted-foreground mt-1">Net Pay</p>
+                          <p className="text-xs">94,400</p>
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground">
+                      Use similar columns and totals in your Excel sheet for each month.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </div>
 
-            <div className="space-y-2">
-              <h4 className="font-semibold text-xs sm:text-sm">Sample row (for reference)</h4>
-              <p className="text-[11px] text-muted-foreground sm:hidden">
-                Tip: Swipe left or right to see all salary columns.
-              </p>
-              <div className="rounded-md border bg-muted/40 overflow-x-auto -mx-2 px-2 pb-2 sm:mx-0 sm:px-0">
-                <Table className="min-w-[460px] text-[11px] sm:text-xs">
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Month Year</TableHead>
-                      <TableHead>Basic Salary</TableHead>
-                      <TableHead>HRA</TableHead>
-                      <TableHead>Bonus</TableHead>
-                      <TableHead>Income Tax</TableHead>
-                      <TableHead>Provident Fund</TableHead>
-                      <TableHead>Total Earnings</TableHead>
-                      <TableHead>Total Deductions</TableHead>
-                      <TableHead>Net Pay</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>JAN 2025</TableCell>
-                      <TableCell>80,000</TableCell>
-                      <TableCell>32,000</TableCell>
-                      <TableCell>10,000</TableCell>
-                      <TableCell>18,000</TableCell>
-                      <TableCell>9,600</TableCell>
-                      <TableCell>1,22,000</TableCell>
-                      <TableCell>27,600</TableCell>
-                      <TableCell>94,400</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
+            {/* Desktop & tablet: original two-column layout with table */}
+            <div className="hidden sm:grid sm:grid-cols-2 sm:gap-4">
+              <div className="space-y-2">
+                <h4 className="font-semibold text-xs sm:text-sm">How to fill the template</h4>
+                <ul className="list-disc pl-4 space-y-1 text-muted-foreground">
+                  <li>
+                    <span className="font-medium">Sheet name</span>: use your organisation name (e.g. TCS, RBS).
+                  </li>
+                  <li>
+                    <span className="font-medium">Month Year</span>: in the first column (e.g. JAN 2025, FEB 2025).
+                  </li>
+                  <li>
+                    <span className="font-medium">Earnings columns</span>: add columns like Basic Salary, HRA,
+                    Bonus, etc. Positive amounts only.
+                  </li>
+                  <li>
+                    <span className="font-medium">Deduction columns</span>: add columns like Income Tax,
+                    Provident Fund, Insurance, etc. Positive amounts only.
+                  </li>
+                  <li>
+                    <span className="font-medium">Totals</span>: the last three columns are calculated by you in
+                    Excel (Total Earnings, Total Deductions, Net Pay).
+                  </li>
+                </ul>
               </div>
-              <p className="text-[11px] text-muted-foreground">
-                You can rename or add more earning/deduction columns; the app will automatically detect them
-                per organisation.
-              </p>
+
+              <div className="space-y-2">
+                <h4 className="font-semibold text-xs sm:text-sm">Sample row (for reference)</h4>
+                <div className="rounded-md border bg-muted/40 overflow-x-auto sm:mx-0 sm:px-0">
+                  <Table className="min-w-[460px] text-[11px] sm:text-xs">
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Month Year</TableHead>
+                        <TableHead>Basic Salary</TableHead>
+                        <TableHead>HRA</TableHead>
+                        <TableHead>Bonus</TableHead>
+                        <TableHead>Income Tax</TableHead>
+                        <TableHead>Provident Fund</TableHead>
+                        <TableHead>Total Earnings</TableHead>
+                        <TableHead>Total Deductions</TableHead>
+                        <TableHead>Net Pay</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>JAN 2025</TableCell>
+                        <TableCell>80,000</TableCell>
+                        <TableCell>32,000</TableCell>
+                        <TableCell>10,000</TableCell>
+                        <TableCell>18,000</TableCell>
+                        <TableCell>9,600</TableCell>
+                        <TableCell>1,22,000</TableCell>
+                        <TableCell>27,600</TableCell>
+                        <TableCell>94,400</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </div>
+                <p className="text-[11px] text-muted-foreground">
+                  You can rename or add more earning/deduction columns; the app will automatically detect them
+                  per organisation.
+                </p>
+              </div>
             </div>
           </div>
         </CardContent>
