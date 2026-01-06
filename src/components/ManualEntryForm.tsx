@@ -15,13 +15,11 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 interface EarningEntry {
   category: string;
   amount: string;
-  description: string;
 }
 
 interface DeductionEntry {
   category: string;
   amount: string;
-  description: string;
 }
 
 interface ManualEntryFormProps {
@@ -45,10 +43,10 @@ export const ManualEntryForm = ({ userId, onSubmitSuccess }: ManualEntryFormProp
   const [month, setMonth] = useState<string>(currentMonth.toString());
   const [year, setYear] = useState<string>(currentYear.toString());
   const [earnings, setEarnings] = useState<EarningEntry[]>([
-    { category: "Basic Salary", amount: "0", description: "" },
+    { category: "Basic Salary", amount: "0" },
   ]);
   const [deductions, setDeductions] = useState<DeductionEntry[]>([
-    { category: "Provident Fund (PF)", amount: "0", description: "" },
+    { category: "Provident Fund (PF)", amount: "0" },
   ]);
   const [templateEarningCategories, setTemplateEarningCategories] = useState<string[]>([]);
   const [templateDeductionCategories, setTemplateDeductionCategories] = useState<string[]>([]);
@@ -89,8 +87,8 @@ export const ManualEntryForm = ({ userId, onSubmitSuccess }: ManualEntryFormProp
     if (templateId === "none") {
       // Reset to defaults
       setOrganization("");
-      setEarnings([{ category: "Basic Salary", amount: "0", description: "" }]);
-      setDeductions([{ category: "Provident Fund (PF)", amount: "0", description: "" }]);
+      setEarnings([{ category: "Basic Salary", amount: "0" }]);
+      setDeductions([{ category: "Provident Fund (PF)", amount: "0" }]);
       setTemplateEarningCategories([]);
       setTemplateDeductionCategories([]);
       return;
@@ -143,7 +141,7 @@ export const ManualEntryForm = ({ userId, onSubmitSuccess }: ManualEntryFormProp
       setTemplateEarningCategories(earningsData);
     } else {
       // Fall back to default single earning row
-      setEarnings([{ category: "Basic Salary", amount: "0", description: "" }]);
+      setEarnings([{ category: "Basic Salary", amount: "0" }]);
       setTemplateEarningCategories([]);
     }
 
@@ -152,13 +150,12 @@ export const ManualEntryForm = ({ userId, onSubmitSuccess }: ManualEntryFormProp
         deductionsData.map((category: string) => ({
           category,
           amount: "0",
-          description: "",
         })),
       );
       setTemplateDeductionCategories(deductionsData);
     } else {
       // Fall back to default single deduction row
-      setDeductions([{ category: "Provident Fund (PF)", amount: "0", description: "" }]);
+      setDeductions([{ category: "Provident Fund (PF)", amount: "0" }]);
       setTemplateDeductionCategories([]);
     }
 
@@ -174,7 +171,6 @@ export const ManualEntryForm = ({ userId, onSubmitSuccess }: ManualEntryFormProp
       {
         category: last?.category || baseCategory,
         amount: last?.amount || "0",
-        description: last?.description || "",
       },
     ]);
   };
@@ -200,7 +196,6 @@ export const ManualEntryForm = ({ userId, onSubmitSuccess }: ManualEntryFormProp
       {
         category: last?.category || baseCategory,
         amount: last?.amount || "0",
-        description: last?.description || "",
       },
     ]);
   };
@@ -290,7 +285,6 @@ export const ManualEntryForm = ({ userId, onSubmitSuccess }: ManualEntryFormProp
           salary_record_id: salaryRecord.id,
           category: raw.category,
           amount,
-          description: raw.description || null,
         }));
 
       const deductionRows = deductionsData
@@ -299,7 +293,6 @@ export const ManualEntryForm = ({ userId, onSubmitSuccess }: ManualEntryFormProp
           salary_record_id: salaryRecord.id,
           category: raw.category,
           amount,
-          description: raw.description || null,
         }));
 
       if (earningsRows.length > 0) {
@@ -317,8 +310,8 @@ export const ManualEntryForm = ({ userId, onSubmitSuccess }: ManualEntryFormProp
       setOrganization("");
       setMonth(currentMonth.toString());
       setYear(currentYear.toString());
-      setEarnings([{ category: "Basic Salary", amount: "0", description: "" }]);
-      setDeductions([{ category: "Provident Fund (PF)", amount: "0", description: "" }]);
+      setEarnings([{ category: "Basic Salary", amount: "0" }]);
+      setDeductions([{ category: "Provident Fund (PF)", amount: "0" }]);
       setTemplateEarningCategories([]);
       setTemplateDeductionCategories([]);
 
@@ -477,10 +470,10 @@ export const ManualEntryForm = ({ userId, onSubmitSuccess }: ManualEntryFormProp
                   <div className="space-y-1.5">
                     {earnings.map((earning, index) => (
                       <div
-                        key={index}
+                        key={`${earning.category}-${index}`}
                         className="flex gap-2 items-start bg-primary/5 px-2 py-1.5 rounded-lg border border-primary/20"
                       >
-                        <div className="flex-1 space-y-1">
+                        <div className="flex-1">
                           <Select
                             value={earning.category}
                             onValueChange={(value) => updateEarning(index, "category", value)}
@@ -496,12 +489,6 @@ export const ManualEntryForm = ({ userId, onSubmitSuccess }: ManualEntryFormProp
                               ))}
                             </SelectContent>
                           </Select>
-                          <Input
-                            className="h-8 text-[11px]"
-                            value={earning.description}
-                            onChange={(e) => updateEarning(index, "description", e.target.value)}
-                            placeholder="Description (optional)"
-                          />
                         </div>
                         <Input
                           className="w-24 h-8 text-xs text-right"
@@ -549,10 +536,10 @@ export const ManualEntryForm = ({ userId, onSubmitSuccess }: ManualEntryFormProp
                   <div className="space-y-1.5">
                     {deductions.map((deduction, index) => (
                       <div
-                        key={index}
+                        key={`${deduction.category}-${index}`}
                         className="flex gap-2 items-start bg-destructive/5 px-2 py-1.5 rounded-lg border border-destructive/20"
                       >
-                        <div className="flex-1 space-y-1">
+                        <div className="flex-1">
                           <Select
                             value={deduction.category}
                             onValueChange={(value) => updateDeduction(index, "category", value)}
@@ -568,12 +555,6 @@ export const ManualEntryForm = ({ userId, onSubmitSuccess }: ManualEntryFormProp
                               ))}
                             </SelectContent>
                           </Select>
-                          <Input
-                            className="h-8 text-[11px]"
-                            value={deduction.description}
-                            onChange={(e) => updateDeduction(index, "description", e.target.value)}
-                            placeholder="Description (optional)"
-                          />
                         </div>
                         <Input
                           className="w-24 h-8 text-xs text-right"
