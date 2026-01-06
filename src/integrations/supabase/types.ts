@@ -349,6 +349,24 @@ export type Database = {
         }
         Relationships: []
       }
+      user_passcode_attempts: {
+        Row: {
+          failed_attempts: number
+          last_attempt_at: string
+          user_id: string
+        }
+        Insert: {
+          failed_attempts?: number
+          last_attempt_at?: string
+          user_id: string
+        }
+        Update: {
+          failed_attempts?: number
+          last_attempt_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_passcodes: {
         Row: {
           created_at: string
@@ -404,6 +422,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      set_passcode: { Args: { p_passcode: string }; Returns: undefined }
+      verify_passcode: { Args: { p_passcode: string }; Returns: boolean }
       wipe_all_salary_data: { Args: never; Returns: undefined }
     }
     Enums: {

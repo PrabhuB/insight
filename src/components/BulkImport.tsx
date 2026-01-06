@@ -884,13 +884,27 @@ export const BulkImport = () => {
     const file = event.target.files?.[0];
     if (!file || !user) return;
 
-    try {
-      const text = await file.text();
-      const data = JSON.parse(text);
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
-      if (!data || typeof data !== "object" || data.version !== 1) {
+    try {
+      if (file.size > MAX_FILE_SIZE) {
+        throw new Error("Backup file is too large (max 10MB)");
+      }
+
+      const text = await file.text();
+
+      let rawData: unknown;
+      try {
+        rawData = JSON.parse(text);
+      } catch {
         throw new Error("Invalid backup file format");
       }
+
+      if (!rawData || typeof rawData !== "object" || (rawData as any).version !== 1) {
+        throw new Error("Invalid backup file format");
+      }
+
+      const data: any = rawData;
 
       const totalTemplates = Array.isArray(data.organizationTemplates) ? data.organizationTemplates.length : 0;
       const totalSalaryRecords = Array.isArray(data.salaryRecords) ? data.salaryRecords.length : 0;

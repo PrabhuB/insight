@@ -218,7 +218,7 @@ const Auth = () => {
 
         emailForLogin = emailResult as string | null;
         if (!emailForLogin) {
-          throw new Error("No account found for this username");
+          throw new Error("Invalid username or password");
         }
       }
 
@@ -227,14 +227,16 @@ const Auth = () => {
         password: parsed.password,
       });
 
-      if (error) throw error;
+      if (error) {
+        throw new Error("Invalid username or password");
+      }
 
       toast.success("Welcome back!");
     } catch (error: any) {
       if (error?.issues?.[0]?.message) {
         toast.error(error.issues[0].message);
       } else {
-        toast.error(error.message || "Failed to sign in");
+        toast.error("Invalid username or password");
       }
     } finally {
       setIsLoading(false);

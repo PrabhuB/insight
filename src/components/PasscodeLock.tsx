@@ -15,14 +15,6 @@ interface PasscodeLockProps {
   onUnlock: () => void;
 }
 
-// Simple hash function for passcode (in production, use backend hashing)
-const hashPasscode = async (passcode: string): Promise<string> => {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(passcode);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-};
 
 export const PasscodeLock = ({ userId, onUnlock }: PasscodeLockProps) => {
   const [passcode, setPasscode] = useState("");
@@ -64,11 +56,8 @@ export const PasscodeLock = ({ userId, onUnlock }: PasscodeLockProps) => {
         return;
       }
 
-      const hashedPasscode = await hashPasscode(validatedPasscode);
-
-      const { error } = await supabase.from("user_passcodes").upsert({
-        user_id: userId,
-        passcode_hash: hashedPasscode,
+      const { error } = await supabase.rpc("set_passcode", {
+        p_passcode: validatedPasscode,
       });
 
       if (error) throw error;
@@ -91,17 +80,14 @@ export const PasscodeLock = ({ userId, onUnlock }: PasscodeLockProps) => {
   const handleUnlock = async () => {
     try {
       const validatedPasscode = passcodeSchema.parse(passcode);
-      const hashedPasscode = await hashPasscode(validatedPasscode);
 
-      const { data, error } = await supabase
-        .from("user_passcodes")
-        .select("passcode_hash")
-        .eq("user_id", userId)
-        .single();
+      const { data, error } = await supabase.rpc("verify_passcode", {
+        p_passcode: validatedPasscode,
+      });
 
       if (error) throw error;
 
-      if (data.passcode_hash === hashedPasscode) {
+      if (data === true) {
         toast.success("Unlocked successfully");
         onUnlock();
       } else {
@@ -113,7 +99,11 @@ export const PasscodeLock = ({ userId, onUnlock }: PasscodeLockProps) => {
         toast.error(error.errors[0].message);
       } else {
         console.error("Error unlocking:", error);
-        toast.error("Failed to unlock");
+        const message =
+          typeof error?.message === "string" && error.message.includes("Too many attempts")
+            ? error.message
+            : "Failed to unlock";
+        toast.error(message);
       }
     }
   };
