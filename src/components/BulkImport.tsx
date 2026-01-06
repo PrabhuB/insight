@@ -805,7 +805,7 @@ export const BulkImport = () => {
     try {
       setIsBackupExporting(true);
 
-      const [salaryResult, templatesResult, employmentResult, profileResult] = await Promise.all([
+      const [salaryResult, templatesResult, employmentResult, profileResult, budgetResult] = await Promise.all([
         supabase
           .from("salary_records")
           .select(
@@ -822,12 +822,14 @@ export const BulkImport = () => {
           .eq("user_id", user.id),
         supabase.from("employment_history").select("*").eq("user_id", user.id),
         supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
+        supabase.from("budget_history").select("*").eq("user_id", user.id),
       ]);
 
       if (salaryResult.error) throw salaryResult.error;
       if (templatesResult.error) throw templatesResult.error;
       if (employmentResult.error) throw employmentResult.error;
       if (profileResult.error) throw profileResult.error;
+      if (budgetResult.error) throw budgetResult.error;
 
       const backupPayload = {
         version: 1,
@@ -837,6 +839,7 @@ export const BulkImport = () => {
         organizationTemplates: templatesResult.data ?? [],
         employmentHistory: employmentResult.data ?? [],
         profile: profileResult.data ?? null,
+        budgetHistory: budgetResult.data ?? [],
       };
 
       const blob = new Blob([JSON.stringify(backupPayload, null, 2)], {
@@ -879,8 +882,9 @@ export const BulkImport = () => {
       const totalSalaryRecords = Array.isArray(data.salaryRecords) ? data.salaryRecords.length : 0;
       const totalEmploymentHistory = Array.isArray(data.employmentHistory) ? data.employmentHistory.length : 0;
       const totalProfileEntries = data.profile && typeof data.profile === "object" ? 1 : 0;
+      const totalBudgetHistory = Array.isArray(data.budgetHistory) ? data.budgetHistory.length : 0;
       const totalImportItems =
-        totalTemplates + totalSalaryRecords + totalEmploymentHistory + totalProfileEntries;
+        totalTemplates + totalSalaryRecords + totalEmploymentHistory + totalProfileEntries + totalBudgetHistory;
  
       setBackupImportTotal(totalImportItems);
       setBackupImportProcessed(0);
@@ -888,7 +892,10 @@ export const BulkImport = () => {
       // Clear existing user data before restoring from backup
       const { error: wipeError } = await supabase.rpc("wipe_all_salary_data");
       if (wipeError) throw wipeError;
- 
+
+      const { error: budgetDeleteError } = await supabase.from("budget_history").delete().eq("user_id", user.id);
+      if (budgetDeleteError) throw budgetDeleteError;
+
       // Restore templates
       if (Array.isArray(data.organizationTemplates)) {
         for (const template of data.organizationTemplates) {
@@ -1004,11 +1011,31 @@ export const BulkImport = () => {
             notes,
           });
           if (employmentError) throw employmentError;
- 
+
           setBackupImportProcessed((prev) => prev + 1);
         }
       }
- 
+
+      // Restore budget history
+      if (Array.isArray(data.budgetHistory)) {
+        for (const entry of data.budgetHistory) {
+          const { month, year, net_income, total_allocated, remaining, categories, saved_at } = entry;
+          const { error: budgetError } = await supabase.from("budget_history").insert({
+            user_id: user.id,
+            month,
+            year,
+            net_income,
+            total_allocated,
+            remaining,
+            categories,
+            saved_at,
+          });
+          if (budgetError) throw budgetError;
+
+          setBackupImportProcessed((prev) => prev + 1);
+        }
+      }
+
       // Restore profile (upsert)
       if (data.profile && typeof data.profile === "object") {
         const { full_name, job_title, location, bio } = data.profile;
