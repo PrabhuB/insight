@@ -103,12 +103,6 @@ const categoryColors = [
   "hsl(var(--chart-5))",
 ];
 
-interface EditAllocationState {
-  type: "category" | "subcategory" | null;
-  categoryId: string | null;
-  subcategoryId?: string | null;
-}
-
 interface BudgetHistoryEntry {
   id: string;
   month: number;
@@ -174,12 +168,6 @@ export function SalaryBudgetPlanning({ userId }: SalaryBudgetPlanningProps) {
   const [addType, setAddType] = useState<"category" | "subcategory">("category");
   const [selectedCategoryForSub, setSelectedCategoryForSub] = useState<string | null>(null);
   const [newName, setNewName] = useState("");
-  const [editAllocation, setEditAllocation] = useState<EditAllocationState>({
-    type: null,
-    categoryId: null,
-    subcategoryId: null,
-  });
-  const [editAmount, setEditAmount] = useState<string>("");
   const [selectedMonth, setSelectedMonth] = useState<number>(() => new Date().getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState<number>(() => new Date().getFullYear());
   
@@ -366,41 +354,28 @@ export function SalaryBudgetPlanning({ userId }: SalaryBudgetPlanningProps) {
     setHistoryEditCategories(null);
   };
 
-  const openEditAllocation = (type: "category" | "subcategory", categoryId: string, subcategoryId?: string) => {
-    const category = categories.find(c => c.id === categoryId);
-    if (!category) return;
-    const currentAmount =
-      type === "category"
-        ? category.amount
-        : category.subcategories.find(s => s.id === subcategoryId)?.amount ?? 0;
-    setEditAllocation({ type, categoryId, subcategoryId: subcategoryId ?? null });
-    setEditAmount(currentAmount.toString());
+  const handleSubcategoryAmountChange = (
+    categoryId: string,
+    subcategoryId: string,
+    rawValue: string,
+  ) => {
+    const cleaned = rawValue.replace(/[^0-9]/g, "");
+    const value = cleaned ? parseInt(cleaned, 10) : 0;
+    if (Number.isNaN(value) || value < 0) return;
+
+    setCategories(prev =>
+      prev.map(category =>
+        category.id !== categoryId
+          ? category
+          : {
+              ...category,
+              subcategories: category.subcategories.map(sub =>
+                sub.id === subcategoryId ? { ...sub, amount: value } : sub,
+              ),
+            },
+      ),
+    );
   };
-
-  const saveEditAllocation = () => {
-    if (!editAllocation.type || !editAllocation.categoryId) return;
-    const value = parseInt(editAmount.replace(/[^0-9]/g, ""), 10);
-    if (isNaN(value) || value < 0) return;
-
-    // Only handle subcategory edits - category amounts are auto-calculated
-    if (editAllocation.type === "subcategory" && editAllocation.subcategoryId) {
-      setCategories(prev =>
-        prev.map(category => {
-          if (category.id !== editAllocation.categoryId) return category;
-          return {
-            ...category,
-            subcategories: category.subcategories.map(sub =>
-              sub.id === editAllocation.subcategoryId ? { ...sub, amount: value } : sub,
-            ),
-          };
-        }),
-      );
-    }
-
-    setEditAllocation({ type: null, categoryId: null, subcategoryId: null });
-    setEditAmount("");
-  };
-
 const categoryIconMap: Record<string, JSX.Element> = {
   housing: <Home className="h-3.5 w-3.5" />,
   bills: <Receipt className="h-3.5 w-3.5" />,
@@ -805,14 +780,25 @@ function getCategoryIcon(id: string, name: string) {
                                     className="h-8 border-0 bg-transparent px-1 text-xs sm:text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
                                   />
                                 </div>
-                                <button
-                                  type="button"
-                                  onClick={() => openEditAllocation("subcategory", category.id, sub.id)}
-                                  className="flex items-baseline gap-2 rounded-full bg-primary/5 px-3 py-1 text-xs sm:text-sm font-medium text-primary hover:bg-primary/10 transition-colors"
-                                >
-                                  <span>{formatCurrency(sub.amount)}</span>
-                                  <span className="text-muted-foreground">{subPercent}%</span>
-                                </button>
+                                <div className="flex items-center gap-2">
+                                  <Input
+                                    type="number"
+                                    inputMode="numeric"
+                                    pattern="\\d*"
+                                    value={sub.amount?.toString() ?? "0"}
+                                    onChange={e =>
+                                      handleSubcategoryAmountChange(
+                                        category.id,
+                                        sub.id,
+                                        e.target.value,
+                                      )
+                                    }
+                                    className="h-8 w-24 border-0 bg-transparent px-1 text-right text-xs sm:text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+                                  />
+                                  <span className="text-[11px] text-muted-foreground min-w-[3rem] text-right">
+                                    {subPercent}%
+                                  </span>
+                                </div>
                                 <button
                                   type="button"
                                   onClick={() => handleDeleteSubcategory(category.id, sub.id)}
@@ -1186,48 +1172,6 @@ function getCategoryIcon(id: string, name: string) {
               Cancel
             </Button>
             <Button type="button" onClick={handleAddItem} disabled={!newName.trim() || (addType === "subcategory" && !selectedCategoryForSub)}>
-              Save
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog
-        open={!!editAllocation.type}
-        onOpenChange={open => {
-          if (!open) {
-            setEditAllocation({ type: null, categoryId: null, subcategoryId: null });
-            setEditAmount("");
-          }
-        }}
-      >
-        <DialogContent className="sm:max-w-sm">
-          <DialogHeader>
-            <DialogTitle>Edit Allocation</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-3 pt-2">
-            <p className="text-xs text-muted-foreground">
-              Enter the planned monthly amount for this {editAllocation.type ?? ""}.
-            </p>
-            <Input
-              type="number"
-              value={editAmount}
-              onChange={e => setEditAmount(e.target.value)}
-              autoFocus
-            />
-          </div>
-          <DialogFooter className="pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => {
-                setEditAllocation({ type: null, categoryId: null, subcategoryId: null });
-                setEditAmount("");
-              }}
-            >
-              Cancel
-            </Button>
-            <Button type="button" onClick={saveEditAllocation} disabled={!editAmount.trim()}>
               Save
             </Button>
           </DialogFooter>
