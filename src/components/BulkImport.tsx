@@ -1255,10 +1255,31 @@ export const BulkImport = () => {
         </CardHeader>
         <CardContent className="space-y-4 text-xs sm:text-sm">
           <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-            <Button asChild variant="outline" className="w-full sm:w-auto text-xs sm:text-sm">
-              <a href="/SalaryData.xlsx" download>
-                Download Excel Template
-              </a>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full sm:w-auto text-xs sm:text-sm"
+              onClick={async () => {
+                try {
+                  const response = await fetch("/SalaryData.xlsx");
+                  if (!response.ok) {
+                    throw new Error("Failed to download template");
+                  }
+                  const blob = await response.blob();
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement("a");
+                  link.href = url;
+                  link.download = "SalaryData.xlsx";
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  URL.revokeObjectURL(url);
+                } catch (error) {
+                  console.error(error);
+                }
+              }}
+            >
+              Download Excel Template
             </Button>
             <p className="text-muted-foreground leading-relaxed">
               Open the template in Excel, fill one row per month and organisation, then save as .xlsx and upload
