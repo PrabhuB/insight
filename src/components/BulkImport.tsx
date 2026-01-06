@@ -1257,25 +1257,49 @@ export const BulkImport = () => {
           <div className="flex flex-col sm:flex-row sm:items-center gap-3">
             <Button
               type="button"
-              variant="outline"
               className="w-full sm:w-auto text-xs sm:text-sm"
               onClick={async () => {
                 try {
-                  const response = await fetch("/SalaryData.xlsx");
-                  if (!response.ok) {
-                    throw new Error("Failed to download template");
-                  }
-                  const blob = await response.blob();
+                  const headers = [
+                    "Month Year",
+                    "Basic Salary",
+                    "HRA",
+                    "Bonus",
+                    "Income Tax",
+                    "Provident Fund",
+                    "Total Earnings",
+                    "Total Deductions",
+                    "Net Pay",
+                  ];
+
+                  const sampleRow = [
+                    "JAN 2025",
+                    80000,
+                    32000,
+                    10000,
+                    18000,
+                    9600,
+                    122000,
+                    27600,
+                    94400,
+                  ];
+
+                  const worksheet = XLSX.utils.aoa_to_sheet([headers, sampleRow]);
+                  const workbook = XLSX.utils.book_new();
+                  XLSX.utils.book_append_sheet(workbook, worksheet, "SalaryTemplate");
+
+                  const buffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+                  const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
                   const url = URL.createObjectURL(blob);
                   const link = document.createElement("a");
                   link.href = url;
-                  link.download = "SalaryData.xlsx";
+                  link.download = "SalaryTemplate.xlsx";
                   document.body.appendChild(link);
                   link.click();
                   document.body.removeChild(link);
                   URL.revokeObjectURL(url);
                 } catch (error) {
-                  console.error(error);
+                  console.error("Failed to generate Excel template", error);
                 }
               }}
             >
