@@ -85,7 +85,7 @@ export const ManualEntryForm = ({ userId, onSubmitSuccess }: ManualEntryFormProp
   const handleTemplateSelect = async (templateId: string) => {
     setSelectedTemplateId(templateId);
     latestTemplateIdRef.current = templateId;
- 
+
     if (templateId === "none") {
       // Reset to defaults
       setOrganization("");
@@ -95,80 +95,73 @@ export const ManualEntryForm = ({ userId, onSubmitSuccess }: ManualEntryFormProp
       setTemplateDeductionCategories([]);
       return;
     }
- 
-    // Find template name
-    const template = templates.find((t) => t.id === templateId);
-    if (template) {
-      setOrganization(template.name);
-    }
- 
+
     // Capture the templateId for this request to avoid race conditions
     const currentTemplateId = templateId;
- 
-    // Fetch template earnings
-    const { data: earningsData, error: earningsError } = await supabase
-      .from("template_earnings")
-      .select("category")
-      .eq("template_id", templateId)
-      .order("created_at", { ascending: true });
- 
-    if (earningsError) {
-      console.error("Error fetching template earnings:", earningsError);
-      toast.error("Failed to load template earnings");
+
+    // Fetch template with its earnings and deductions in a single request
+    const { data: templateData, error: templateError } = await supabase
+      .from("organization_templates")
+      .select(
+        `name,
+         template_earnings (category),
+         template_deductions (category)`
+      )
+      .eq("id", templateId)
+      .maybeSingle();
+
+    if (templateError) {
+      console.error("Error fetching template details:", templateError);
+      toast.error("Failed to load template details");
       return;
     }
- 
-    // Fetch template deductions
-    const { data: deductionsData, error: deductionsError } = await supabase
-      .from("template_deductions")
-      .select("category")
-      .eq("template_id", templateId)
-      .order("created_at", { ascending: true });
- 
-    if (deductionsError) {
-      console.error("Error fetching template deductions:", deductionsError);
-      toast.error("Failed to load template deductions");
-      return;
-    }
- 
+
     // If user switched templates while we were loading, ignore this response
     if (latestTemplateIdRef.current !== currentTemplateId) {
       return;
     }
- 
-    // Populate form
-    if (earningsData && earningsData.length > 0) {
-      const templateEarnings = earningsData.map((e) => e.category);
+
+    if (!templateData) {
+      toast.error("Template not found");
+      return;
+    }
+
+    // Set organization name from template
+    setOrganization(templateData.name ?? "");
+
+    const earningsData = (templateData.template_earnings || []).map((e: any) => e.category);
+    const deductionsData = (templateData.template_deductions || []).map((d: any) => d.category);
+
+    if (earningsData.length > 0) {
       setEarnings(
-        templateEarnings.map((category) => ({
+        earningsData.map((category: string) => ({
           category,
           amount: "0",
           description: "",
         })),
       );
-      setTemplateEarningCategories(templateEarnings);
+      setTemplateEarningCategories(earningsData);
     } else {
       // Fall back to default single earning row
-      setEarnings([{ category: "Basic Salary", amount: "", description: "" }]);
+      setEarnings([{ category: "Basic Salary", amount: "0", description: "" }]);
       setTemplateEarningCategories([]);
     }
- 
-    if (deductionsData && deductionsData.length > 0) {
-      const templateDeductions = deductionsData.map((d) => d.category);
+
+    if (deductionsData.length > 0) {
       setDeductions(
-        templateDeductions.map((category) => ({
+        deductionsData.map((category: string) => ({
           category,
           amount: "0",
           description: "",
         })),
       );
-      setTemplateDeductionCategories(templateDeductions);
+      setTemplateDeductionCategories(deductionsData);
     } else {
       // Fall back to default single deduction row
-      setDeductions([{ category: "Provident Fund (PF)", amount: "", description: "" }]);
+      setDeductions([{ category: "Provident Fund (PF)", amount: "0", description: "" }]);
       setTemplateDeductionCategories([]);
     }
- 
+
     toast.success("Template loaded! Now fill in the amounts.");
   };
 
