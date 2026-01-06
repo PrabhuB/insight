@@ -64,6 +64,10 @@ export const SalaryHistory = ({ userId, refreshTrigger }: SalaryHistoryProps) =>
     `salary-history:${userId}:deductionFilter`,
     "all",
   );
+  const [monthRange, setMonthRange] = usePersistentFilter<string>(
+    `salary-history:${userId}:monthRange`,
+    "3",
+  );
   const [employmentHistory, setEmploymentHistory] = useState<any[]>([]);
   const [employmentForm, setEmploymentForm] = useState({
     organization: "",
@@ -372,11 +376,22 @@ export const SalaryHistory = ({ userId, refreshTrigger }: SalaryHistoryProps) =>
 
   const sortedRecords = hasNoDataForFilters ? [] : filteredRecords.length > 0 ? filteredRecords : records;
 
-  const sliceCount = sortedRecords.length;
+  const chartRecords = sortedRecords;
+  const monthRangeNumber = parseInt(monthRange, 10);
+
+  const chartRecordsWithRange =
+    !isNaN(monthRangeNumber) && chartRecords.length > 0
+      ? chartRecords.filter((record) => {
+          const recordIndex = record.year * 12 + record.month;
+          const latestIndex = chartRecords[0].year * 12 + chartRecords[0].month;
+          const cutoffIndex = latestIndex - (monthRangeNumber - 1);
+          return recordIndex >= cutoffIndex;
+        })
+      : chartRecords;
 
   const recordsForList = sortedRecords;
 
-  const chartSource = recordsForList.slice().reverse();
+  const chartSource = chartRecordsWithRange.slice().reverse();
 
   useEffect(() => {
     if (hasInitializedFinancialYear) return;
@@ -880,34 +895,15 @@ export const SalaryHistory = ({ userId, refreshTrigger }: SalaryHistoryProps) =>
                         </Select>
                       </div>
                       <div className="flex items-center gap-2 min-w-[170px]">
-                        <span className="text-muted-foreground">Earnings</span>
-                        <Select value={earningFilter} onValueChange={setEarningFilter}>
+                        <span className="text-muted-foreground">Period</span>
+                        <Select value={monthRange} onValueChange={setMonthRange}>
                           <SelectTrigger className="h-8 w-[150px] text-xs">
-                            <SelectValue placeholder="All" />
+                            <SelectValue placeholder="Last 3 months" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="all">All earnings</SelectItem>
-                            {earningCategories.map((cat) => (
-                              <SelectItem key={cat} value={cat}>
-                                {cat}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="flex items-center gap-2 min-w-[190px]">
-                        <span className="text-muted-foreground">Deductions</span>
-                        <Select value={deductionFilter} onValueChange={setDeductionFilter}>
-                          <SelectTrigger className="h-8 w-[160px] text-xs">
-                            <SelectValue placeholder="All" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="all">All deductions</SelectItem>
-                            {deductionCategories.map((cat) => (
-                              <SelectItem key={cat} value={cat}>
-                                {cat}
-                              </SelectItem>
-                            ))}
+                            <SelectItem value="1">Last 1 month</SelectItem>
+                            <SelectItem value="3">Last 3 months</SelectItem>
+                            <SelectItem value="6">Last 6 months</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
