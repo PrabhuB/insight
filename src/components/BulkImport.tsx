@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
@@ -1241,6 +1242,93 @@ export const BulkImport = () => {
               />
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      <Card className="border-primary/20 shadow-lg mt-6">
+        <CardHeader>
+          <CardTitle>Excel Template &amp; Sample</CardTitle>
+          <CardDescription>
+            Download a ready-made Excel template and follow the hints below to prepare salary data for bulk
+            import.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4 text-xs sm:text-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <Button asChild variant="outline" className="w-full sm:w-auto text-xs sm:text-sm">
+              <a href="/SalaryData.xlsx" download>
+                Download Excel Template
+              </a>
+            </Button>
+            <p className="text-muted-foreground leading-relaxed">
+              Open the template in Excel, fill one row per month and organisation, then save as .xlsx and upload
+              it above.
+            </p>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="space-y-2">
+              <h4 className="font-semibold text-xs sm:text-sm">How to fill the template</h4>
+              <ul className="list-disc pl-4 space-y-1 text-muted-foreground">
+                <li>
+                  <span className="font-medium">Sheet name</span>: use your organisation name (e.g. TCS, RBS).
+                </li>
+                <li>
+                  <span className="font-medium">Month Year</span>: in the first column (e.g. JAN 2025, FEB 2025).
+                </li>
+                <li>
+                  <span className="font-medium">Earnings columns</span>: add columns like Basic Salary, HRA,
+                  Bonus, etc. Positive amounts only.
+                </li>
+                <li>
+                  <span className="font-medium">Deduction columns</span>: add columns like Income Tax,
+                  Provident Fund, Insurance, etc. Positive amounts only.
+                </li>
+                <li>
+                  <span className="font-medium">Totals</span>: the last three columns are calculated by you in
+                  Excel (Total Earnings, Total Deductions, Net Pay).
+                </li>
+              </ul>
+            </div>
+
+            <div className="space-y-2">
+              <h4 className="font-semibold text-xs sm:text-sm">Sample row (for reference)</h4>
+              <div className="rounded-md border bg-muted/40 overflow-x-auto">
+                <Table className="min-w-[520px] text-[11px] sm:text-xs">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Month Year</TableHead>
+                      <TableHead>Basic Salary</TableHead>
+                      <TableHead>HRA</TableHead>
+                      <TableHead>Bonus</TableHead>
+                      <TableHead>Income Tax</TableHead>
+                      <TableHead>Provident Fund</TableHead>
+                      <TableHead>Total Earnings</TableHead>
+                      <TableHead>Total Deductions</TableHead>
+                      <TableHead>Net Pay</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>JAN 2025</TableCell>
+                      <TableCell>80,000</TableCell>
+                      <TableCell>32,000</TableCell>
+                      <TableCell>10,000</TableCell>
+                      <TableCell>18,000</TableCell>
+                      <TableCell>9,600</TableCell>
+                      <TableCell>1,22,000</TableCell>
+                      <TableCell>27,600</TableCell>
+                      <TableCell>94,400</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+              <p className="text-[11px] text-muted-foreground">
+                You can rename or add more earning/deduction columns; the app will automatically detect them
+                per organisation.
+              </p>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
