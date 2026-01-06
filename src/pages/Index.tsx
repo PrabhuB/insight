@@ -62,7 +62,7 @@ const Index = () => {
           <p className="text-base font-semibold">
             Hi{userDisplayName ? `, ${userDisplayName}` : ", Prabhu"} 👋
           </p>
-          <p className="text-xs text-muted-foreground truncate">
+          <p className="text-xs text-muted-foreground leading-snug">
             Track your salary and budget in one place.
           </p>
         </div>

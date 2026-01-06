@@ -164,7 +164,7 @@ export const AdminPanel = ({ currentUserId }: AdminPanelProps) => {
                     <TableCell className="text-xs text-muted-foreground">
                       {user.is_locked ? "Locked / Denied" : "Pending approval"}
                     </TableCell>
-                    <TableCell className="flex gap-2">
+                    <TableCell className="flex flex-wrap gap-1 justify-end md:flex-nowrap md:gap-2">
                       <Button
                         size="icon"
                         variant="ghost"
@@ -260,7 +260,7 @@ export const AdminPanel = ({ currentUserId }: AdminPanelProps) => {
                       <TableCell className="text-xs text-muted-foreground">
                         {row.is_locked ? "Locked" : "Active"}
                       </TableCell>
-                      <TableCell className="flex gap-2">
+                      <TableCell className="flex flex-wrap gap-1 justify-end md:flex-nowrap md:gap-2">
                         {row.role === "admin" ? (
                           <Button
                             variant="ghost"
