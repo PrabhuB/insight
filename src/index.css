@@ -85,72 +85,73 @@ All colors MUST be HSL.
     --spacing: 0.25rem;
   }
 
-  .dark {
-    /* Deep navy base for Dark theme */
-    --background: 220 45% 6%;
-    --foreground: 210 25% 90%;
+.dark {
+    /* Dark theme: deep charcoal glass with soft translucency */
+    --background: 222 28% 8%;
+    --foreground: 210 15% 92%;
 
-    /* Dark mode surfaces: layered navies with subtle glass depth */
-    --card: 222 40% 10%;
-    --card-foreground: 210 25% 92%;
+    /* Dark mode surfaces: layered charcoal with subtle glass depth */
+    --card: 222 24% 10%;
+    --card-foreground: 210 15% 94%;
 
-    --popover: 222 40% 9%;
-    --popover-foreground: 210 25% 92%;
+    --popover: 222 26% 9%;
+    --popover-foreground: 210 15% 94%;
 
-    /* Palette: deep navy base, soft teal accents, gold highlights */
-    --primary: 172 55% 46%; /* soft teal */
-    --primary-foreground: 220 60% 7%;
+    /* Primary actions: accent blue for clarity on dark glass */
+    --primary: 222 84% 60%;
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 222 32% 14%;
-    --secondary-foreground: 210 25% 92%;
+    --secondary: 222 22% 14%;
+    --secondary-foreground: 210 18% 90%;
 
-    --muted: 222 28% 16%;
-    --muted-foreground: 215 16% 68%;
+    --muted: 222 20% 16%;
+    --muted-foreground: 215 14% 68%;
 
-    --accent: 43 90% 55%; /* warm gold accent */
-    --accent-foreground: 220 60% 7%;
+    /* Gold accent reserved for highlights and key metrics */
+    --accent: 43 90% 55%;
+    --accent-foreground: 222 28% 8%;
 
     --destructive: 0 72% 60%;
     --destructive-foreground: 0 0% 100%;
 
     /* Very soft separators for dark glass surfaces */
-    --border: 220 35% 30% / 0.5;
-    --input: 220 35% 26% / 0.8;
-    --ring: 172 70% 50% / 0.9;
+    --border: 222 18% 32% / 0.55;
+    --input: 222 20% 26% / 0.85;
+    --ring: 222 84% 60% / 0.7;
 
     --success: 152 58% 44%;
-    --success-foreground: 220 60% 7%;
+    --success-foreground: 222 28% 8%;
 
     --warning: 43 90% 55%;
-    --warning-foreground: 220 60% 7%;
+    --warning-foreground: 222 28% 8%;
 
-    --sidebar-background: 222 40% 7% / 0.96;
-    --sidebar-foreground: 210 25% 92%;
-    --sidebar-primary: 172 55% 46%;
-    --sidebar-primary-foreground: 220 60% 7%;
-    --sidebar-accent: 222 34% 12%;
-    --sidebar-accent-foreground: 210 25% 92%;
-    --sidebar-border: 220 35% 30% / 0.5;
-    --sidebar-ring: 172 70% 50% / 0.9;
+    --sidebar-background: 222 26% 7% / 0.96;
+    --sidebar-foreground: 210 18% 92%;
+    --sidebar-primary: 222 84% 60%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 222 22% 12%;
+    --sidebar-accent-foreground: 210 18% 92%;
+    --sidebar-border: 222 18% 32% / 0.55;
+    --sidebar-ring: 222 84% 60% / 0.7;
 
-    /* Charts tuned for dark finance dashboards */
-    --chart-1: 172 60% 48%; /* teal */
-    --chart-2: 43 90% 55%;  /* gold */
-    --chart-3: 204 80% 60%; /* cyan highlight */
+    /* Charts tuned for dark finance dashboards with restrained vibrancy */
+    --chart-1: 222 84% 60%; /* primary blue */
+    --chart-2: 160 60% 45%; /* teal */
+    --chart-3: 43 90% 55%;  /* gold */
     --chart-4: 291 50% 52%;
     --chart-5: 10 80% 60%;
 
-    --sidebar: 222 40% 7% / 0.96;
+    --sidebar: 222 26% 7% / 0.96;
 
-    /* Soft, atmospheric shadows for glassy dark surfaces */
-    --shadow-2xs: 0 10px 20px hsl(220 60% 10% / 0.45);
-    --shadow-xs: 0 16px 30px hsl(220 60% 10% / 0.5);
-    --shadow-sm: 0 22px 40px hsl(220 60% 10% / 0.55);
-    --shadow: 0 28px 52px hsl(220 60% 10% / 0.6);
-    --shadow-md: 0 36px 70px hsl(220 60% 10% / 0.65);
-    --shadow-lg: 0 44px 90px hsl(220 60% 10% / 0.7);
-    --shadow-xl: 0 56px 120px hsl(220 60% 10% / 0.75);
-    --shadow-2xl: 0 72px 170px hsl(220 60% 10% / 0.8);
+    /* Keep shadows subtle – depth comes mainly from blur and translucency */
+    --shadow-2xs: 0 10px 20px hsl(220 60% 6% / 0.25);
+    --shadow-xs: 0 14px 26px hsl(220 60% 6% / 0.28);
+    --shadow-sm: 0 18px 32px hsl(220 60% 6% / 0.3);
+    --shadow: 0 22px 40px hsl(220 60% 6% / 0.34);
+    --shadow-md: 0 26px 50px hsl(220 60% 6% / 0.36);
+    --shadow-lg: 0 32px 64px hsl(220 60% 6% / 0.38);
+    --shadow-xl: 0 40px 82px hsl(220 60% 6% / 0.4);
+    --shadow-2xl: 0 52px 110px hsl(220 60% 6% / 0.42);
   }
 
   .amoled {
@@ -234,11 +235,12 @@ All colors MUST be HSL.
     background-attachment: fixed;
   }
 
-  .dark body {
+.dark body {
+    /* Dark theme: deep charcoal with subtle radial light, no harsh glows */
     background-image:
-      radial-gradient(circle at 0% 0%, hsl(222 60% 56% / 0.18), transparent 55%),
-      radial-gradient(circle at 100% 100%, hsl(160 60% 39% / 0.12), transparent 55%),
-      linear-gradient(to bottom right, hsl(0 0% 9%), hsl(0 0% 5%));
+      radial-gradient(circle at 0% 0%, hsl(222 84% 60% / 0.12), transparent 55%),
+      radial-gradient(circle at 100% 100%, hsl(210 40% 40% / 0.08), transparent 55%),
+      linear-gradient(to bottom right, hsl(222 24% 10%), hsl(222 24% 6%));
   }
 
   .amoled body {
@@ -261,28 +263,33 @@ All colors MUST be HSL.
     @apply rounded-full border border-border/40 bg-card/80 backdrop-blur-2xl shadow-md px-1 py-1;
   }
 
-  /* Dark theme: elevated glass surfaces with navy, teal & gold lighting */
+  /* Dark theme: frosted charcoal glass, minimal borders, no heavy shadows */
   .dark .glass-surface {
-    box-shadow: var(--shadow-md);
+    background-color: hsl(222 24% 10% / 0.9);
     background-image:
-      radial-gradient(circle at 0% 0%, hsl(172 70% 32% / 0.3), transparent 55%),
-      radial-gradient(circle at 100% 100%, hsl(204 80% 40% / 0.22), transparent 55%),
-      linear-gradient(to bottom right, hsl(220 45% 10%), hsl(220 40% 6%));
-    border-color: hsl(190 40% 80% / 0.16);
+      radial-gradient(circle at 0% 0%, hsl(0 0% 100% / 0.06), transparent 55%),
+      radial-gradient(circle at 100% 100%, hsl(210 40% 96% / 0.03), transparent 55%);
+    border-color: hsl(0 0% 100% / 0.06);
+    box-shadow: 0 0 0 1px hsl(0 0% 100% / 0.02);
+    backdrop-filter: blur(18px);
   }
 
   .dark .glass-header {
-    box-shadow: var(--shadow-sm);
+    background-color: hsl(222 26% 10% / 0.9);
     background-image:
-      radial-gradient(circle at 0% 0%, hsl(43 95% 62% / 0.32), transparent 55%),
-      linear-gradient(to bottom right, hsl(220 48% 10%), hsl(220 40% 7%));
-    border-color: hsl(43 95% 72% / 0.25);
+      linear-gradient(to bottom right, hsl(222 26% 12%), hsl(222 24% 8%));
+    border-color: hsl(0 0% 100% / 0.08);
+    box-shadow: 0 0 0 1px hsl(0 0% 100% / 0.02);
+    backdrop-filter: blur(20px);
   }
 
   .dark .glass-tabs {
-    box-shadow: var(--shadow-xs);
-    background-image: linear-gradient(to bottom right, hsl(222 40% 12%), hsl(220 40% 8%));
-    border-color: hsl(190 40% 80% / 0.14);
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    padding-inline: 0.25rem;
+    padding-block: 0.25rem;
   }
 
   /* AMOLED mode: turn off blur and rely on solid blacks + subtle contrast */
