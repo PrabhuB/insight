@@ -641,7 +641,7 @@ export const SalaryDataTable = ({ userId, refreshTrigger }: SalaryDataTableProps
 
                 <div className="space-y-3">
                   <h3 className="text-sm font-semibold">Organization Summary</h3>
-                  <Table>
+                  <Table className="text-xs md:text-sm">
                     <TableHeader>
                       <TableRow>
                         <TableHead>Organization</TableHead>
@@ -654,14 +654,19 @@ export const SalaryDataTable = ({ userId, refreshTrigger }: SalaryDataTableProps
                     <TableBody>
                       {orgSummaryRows.map((row) => (
                         <TableRow key={row.organization} className="hover:bg-muted/50">
-                          <TableCell>
+                          <TableCell className="max-w-[120px] whitespace-normal break-words">
                             {row.organization === "Not specified" ? (
                               <span className="text-xs text-muted-foreground">Not specified</span>
                             ) : (
-                              <Badge variant="secondary">{row.organization}</Badge>
+                              <Badge
+                                variant="secondary"
+                                className="whitespace-normal break-words text-[11px] px-2 py-0.5"
+                              >
+                                {row.organization}
+                              </Badge>
                             )}
                           </TableCell>
-                          <TableCell className="text-right text-xs text-muted-foreground">
+                          <TableCell className="text-right text-[11px] md:text-xs text-muted-foreground">
                             {row.months}
                           </TableCell>
                           <TableCell className="text-right font-medium text-primary">
@@ -678,7 +683,7 @@ export const SalaryDataTable = ({ userId, refreshTrigger }: SalaryDataTableProps
                       {selectedOrg === "all" && (
                         <TableRow className="bg-muted/40 font-semibold">
                           <TableCell>Overall Total</TableCell>
-                          <TableCell className="text-right text-xs text-muted-foreground">
+                          <TableCell className="text-right text-[11px] md:text-xs text-muted-foreground">
                             {overallTotals.months}
                           </TableCell>
                           <TableCell className="text-right text-primary">
