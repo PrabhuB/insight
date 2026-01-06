@@ -360,6 +360,23 @@ export const BulkImport = () => {
   const [exportYearTo, setExportYearTo] = useState<string>("");
   const [includeRareEarningCategories, setIncludeRareEarningCategories] = useState(true);
   const [includeRareDeductionCategories, setIncludeRareDeductionCategories] = useState(true);
+  const [backupConfirmOpen, setBackupConfirmOpen] = useState(false);
+  const [pendingBackupData, setPendingBackupData] = useState<any | null>(null);
+  const [pendingBackupCounts, setPendingBackupCounts] = useState<{
+    totalTemplates: number;
+    totalSalaryRecords: number;
+    totalEmploymentHistory: number;
+    totalProfileEntries: number;
+    totalBudgetHistory: number;
+    totalImportItems: number;
+  } | null>(null);
+  const [backupImportSummary, setBackupImportSummary] = useState<{
+    totalTemplates: number;
+    totalSalaryRecords: number;
+    totalEmploymentHistory: number;
+    totalProfileEntries: number;
+    totalBudgetHistory: number;
+  } | null>(null);
 
   const MAX_AMOUNT = 100_000_000; // Upper bound to prevent extreme salary values
   const MIN_YEAR = 2000;
@@ -866,18 +883,15 @@ export const BulkImport = () => {
   const handleImportBackupFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file || !user) return;
- 
+
     try {
-      setIsBackupImporting(true);
-      setBackupImportTotal(0);
-      setBackupImportProcessed(0);
       const text = await file.text();
       const data = JSON.parse(text);
- 
+
       if (!data || typeof data !== "object" || data.version !== 1) {
         throw new Error("Invalid backup file format");
       }
- 
+
       const totalTemplates = Array.isArray(data.organizationTemplates) ? data.organizationTemplates.length : 0;
       const totalSalaryRecords = Array.isArray(data.salaryRecords) ? data.salaryRecords.length : 0;
       const totalEmploymentHistory = Array.isArray(data.employmentHistory) ? data.employmentHistory.length : 0;
@@ -885,10 +899,38 @@ export const BulkImport = () => {
       const totalBudgetHistory = Array.isArray(data.budgetHistory) ? data.budgetHistory.length : 0;
       const totalImportItems =
         totalTemplates + totalSalaryRecords + totalEmploymentHistory + totalProfileEntries + totalBudgetHistory;
- 
-      setBackupImportTotal(totalImportItems);
+
+      setPendingBackupData(data);
+      setPendingBackupCounts({
+        totalTemplates,
+        totalSalaryRecords,
+        totalEmploymentHistory,
+        totalProfileEntries,
+        totalBudgetHistory,
+        totalImportItems,
+      });
+      setBackupImportSummary(null);
+      setBackupConfirmOpen(true);
+    } catch (error: any) {
+      console.error("Backup file parse error:", error);
+      toast.error(error.message || "Failed to read backup file");
+      if (backupFileInputRef.current) {
+        backupFileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const performBackupImport = async () => {
+    if (!user || !pendingBackupData || !pendingBackupCounts) return;
+
+    try {
+      setIsBackupImporting(true);
+      setBackupImportTotal(pendingBackupCounts.totalImportItems);
       setBackupImportProcessed(0);
- 
+      setBackupConfirmOpen(false);
+
+      const data = pendingBackupData;
+
       // Clear existing user data before restoring from backup
       const { error: wipeError } = await supabase.rpc("wipe_all_salary_data");
       if (wipeError) throw wipeError;
@@ -900,7 +942,7 @@ export const BulkImport = () => {
       if (Array.isArray(data.organizationTemplates)) {
         for (const template of data.organizationTemplates) {
           const { id, name, template_earnings, template_deductions } = template;
- 
+
           const { data: insertedTemplate, error: templateError } = await supabase
             .from("organization_templates")
             .insert({
@@ -910,9 +952,9 @@ export const BulkImport = () => {
             })
             .select()
             .single();
- 
+
           if (templateError) throw templateError;
- 
+
           if (Array.isArray(template_earnings) && template_earnings.length > 0) {
             const { error: earningsError } = await supabase.from("template_earnings").insert(
               template_earnings.map((e: any) => ({
@@ -922,7 +964,7 @@ export const BulkImport = () => {
             );
             if (earningsError) throw earningsError;
           }
- 
+
           if (Array.isArray(template_deductions) && template_deductions.length > 0) {
             const { error: deductionsError } = await supabase.from("template_deductions").insert(
               template_deductions.map((d: any) => ({
@@ -932,7 +974,7 @@ export const BulkImport = () => {
             );
             if (deductionsError) throw deductionsError;
           }
- 
+
           setBackupImportProcessed((prev) => prev + 1);
         }
       }
@@ -953,7 +995,7 @@ export const BulkImport = () => {
             earnings,
             deductions,
           } = record;
- 
+
           const { data: insertedRecord, error: recordError } = await supabase
             .from("salary_records")
             .insert({
@@ -970,9 +1012,9 @@ export const BulkImport = () => {
             })
             .select()
             .single();
- 
+
           if (recordError) throw recordError;
- 
+
           if (Array.isArray(earnings) && earnings.length > 0) {
             const { error: earningsError } = await supabase.from("earnings").insert(
               earnings.map((e: any) => ({
@@ -983,7 +1025,7 @@ export const BulkImport = () => {
             );
             if (earningsError) throw earningsError;
           }
- 
+
           if (Array.isArray(deductions) && deductions.length > 0) {
             const { error: deductionsError } = await supabase.from("deductions").insert(
               deductions.map((d: any) => ({
@@ -994,7 +1036,7 @@ export const BulkImport = () => {
             );
             if (deductionsError) throw deductionsError;
           }
- 
+
           setBackupImportProcessed((prev) => prev + 1);
         }
       }
@@ -1047,10 +1089,18 @@ export const BulkImport = () => {
           bio,
         });
         if (profileError) throw profileError;
- 
+
         setBackupImportProcessed((prev) => prev + 1);
       }
- 
+
+      setBackupImportSummary({
+        totalTemplates: pendingBackupCounts.totalTemplates,
+        totalSalaryRecords: pendingBackupCounts.totalSalaryRecords,
+        totalEmploymentHistory: pendingBackupCounts.totalEmploymentHistory,
+        totalProfileEntries: pendingBackupCounts.totalProfileEntries,
+        totalBudgetHistory: pendingBackupCounts.totalBudgetHistory,
+      });
+
       toast.success("Backup imported successfully");
     } catch (error: any) {
       console.error("Backup import error:", error);
@@ -1059,6 +1109,8 @@ export const BulkImport = () => {
       setIsBackupImporting(false);
       setBackupImportTotal(0);
       setBackupImportProcessed(0);
+      setPendingBackupData(null);
+      setPendingBackupCounts(null);
       if (backupFileInputRef.current) {
         backupFileInputRef.current.value = "";
       }
@@ -1244,6 +1296,12 @@ export const BulkImport = () => {
             />
           </div>
 
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            Importing a backup will <span className="font-semibold text-destructive">permanently wipe</span> all
+            existing salary records, templates, employment history, budget plans, and related data for this
+            account before restoring from the file.
+          </p>
+
           {(isBackupExporting || isBackupImporting) && (
             <div className="space-y-2 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
@@ -1253,9 +1311,7 @@ export const BulkImport = () => {
                     ? "Exporting backup..."
                     : `Importing backup... ${
                         backupImportTotal
-                          ? Math.round(
-                              (backupImportProcessed / Math.max(backupImportTotal, 1)) * 100,
-                            )
+                          ? Math.round((backupImportProcessed / Math.max(backupImportTotal, 1)) * 100)
                           : 0
                       }%`}
                 </span>
@@ -1269,8 +1325,60 @@ export const BulkImport = () => {
               />
             </div>
           )}
+
+          {backupImportSummary && !isBackupImporting && (
+            <div className="mt-2 space-y-2 border-t pt-3 text-xs sm:text-sm">
+              <div className="font-medium">Last backup import summary</div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1 text-muted-foreground">
+                <span>
+                  Templates restored: <span className="font-semibold">{backupImportSummary.totalTemplates}</span>
+                </span>
+                <span>
+                  Salary records restored: <span className="font-semibold">{backupImportSummary.totalSalaryRecords}</span>
+                </span>
+                <span>
+                  Employment entries restored: <span className="font-semibold">{backupImportSummary.totalEmploymentHistory}</span>
+                </span>
+                <span>
+                  Budget snapshots restored: <span className="font-semibold">{backupImportSummary.totalBudgetHistory}</span>
+                </span>
+                <span>
+                  Profile restored: <span className="font-semibold">{backupImportSummary.totalProfileEntries}</span>
+                </span>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
+
+      <AlertDialog open={backupConfirmOpen} onOpenChange={setBackupConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm backup import</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will <span className="font-semibold">erase all existing data</span> in your account, including
+              salary records, templates, employment history, and budget history, before restoring from the selected
+              backup file. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          {pendingBackupCounts && (
+            <div className="mt-2 text-xs sm:text-sm text-muted-foreground space-y-1">
+              <p>If you continue, the following items will be restored from the backup:</p>
+              <ul className="list-disc pl-5 space-y-0.5">
+                <li>Templates: {pendingBackupCounts.totalTemplates}</li>
+                <li>Salary records: {pendingBackupCounts.totalSalaryRecords}</li>
+                <li>Employment entries: {pendingBackupCounts.totalEmploymentHistory}</li>
+                <li>Budget snapshots: {pendingBackupCounts.totalBudgetHistory}</li>
+                <li>Profile: {pendingBackupCounts.totalProfileEntries}</li>
+              </ul>
+            </div>
+          )}
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={performBackupImport}>Yes, wipe &amp; restore</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <Card className="border-primary/20 shadow-lg mt-6">
         <CardHeader>
