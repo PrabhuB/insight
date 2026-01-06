@@ -1454,9 +1454,9 @@ export const BulkImport = () => {
             >
               Download Excel Template
             </Button>
-            <p className="text-muted-foreground leading-relaxed">
+            <p className="text-muted-foreground leading-relaxed text-xs sm:text-sm">
               Open the template in Excel, fill one row per month and organisation, then save as .xlsx and upload
-              it above.
+              it above. On mobile, you can scroll sideways on the sample table to view all columns.
             </p>
           </div>
 
@@ -1487,8 +1487,11 @@ export const BulkImport = () => {
 
             <div className="space-y-2">
               <h4 className="font-semibold text-xs sm:text-sm">Sample row (for reference)</h4>
-              <div className="rounded-md border bg-muted/40 overflow-x-auto">
-                <Table className="min-w-[520px] text-[11px] sm:text-xs">
+              <p className="text-[11px] text-muted-foreground sm:hidden">
+                Tip: Swipe left or right to see all salary columns.
+              </p>
+              <div className="rounded-md border bg-muted/40 overflow-x-auto -mx-2 px-2 pb-2 sm:mx-0 sm:px-0">
+                <Table className="min-w-[460px] text-[11px] sm:text-xs">
                   <TableHeader>
                     <TableRow>
                       <TableHead>Month Year</TableHead>
