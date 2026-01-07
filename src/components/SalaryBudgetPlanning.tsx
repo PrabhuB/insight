@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Wallet2, Plus, GripVertical, Trash2, ChevronDown, ChevronRight, Home, UtensilsCrossed, PiggyBank, Sparkles, Receipt, Landmark, CreditCard, Eye, Pencil } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Wallet2, Plus, GripVertical, Trash2, ChevronDown, ChevronRight, Home, UtensilsCrossed, PiggyBank, Sparkles, Receipt, Landmark, CreditCard, Eye, Pencil, MoreVertical } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
@@ -684,70 +685,114 @@ function getCategoryIcon(id: string, name: string) {
                       value={category.id}
                       className="border border-border/70 rounded-xl bg-background/80 backdrop-blur-md px-3"
                     >
-                      <AccordionTrigger className="flex items-center gap-2 py-3 [&>svg]:hidden">
-                        <div className="flex items-center gap-2 min-w-0 flex-1">
-                          <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-medium text-primary">
-                            {getCategoryIcon(category.id, category.name)}
+                      <AccordionTrigger className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-2 py-3 [&>svg]:hidden">
+                        <div className="flex w-full flex-col gap-2">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center text-xs font-medium text-primary">
+                              {getCategoryIcon(category.id, category.name)}
+                            </div>
+                            <Input
+                              value={category.name}
+                              onChange={e =>
+                                setCategories(prev =>
+                                  prev.map(cat =>
+                                    cat.id === category.id ? { ...cat, name: e.target.value } : cat,
+                                  ),
+                                )
+                              }
+                              className="h-9 border-0 bg-transparent px-1 text-sm sm:text-sm font-medium focus-visible:ring-0 focus-visible:ring-offset-0"
+                            />
                           </div>
-                          <Input
-                            value={category.name}
-                            onChange={e =>
-                              setCategories(prev =>
-                                prev.map(cat =>
-                                  cat.id === category.id ? { ...cat, name: e.target.value } : cat,
-                                ),
-                              )
-                            }
-                            className="h-8 border-0 bg-transparent px-1 text-sm font-medium focus-visible:ring-0 focus-visible:ring-offset-0"
-                          />
-                        </div>
-                        <div className="flex items-center gap-2 text-sm">
-                          {/* Auto-calculated category total - not editable */}
-                          <div
-                            className="flex items-baseline gap-2 rounded-full bg-primary/5 px-3 py-1 text-xs sm:text-sm font-medium text-primary"
-                            title="Auto-calculated from subcategories"
-                          >
-                            <span>{formatCurrency(categoryTotal)}</span>
-                            <span className="text-muted-foreground">{categoryPercent}%</span>
-                          </div>
-                          <div className="flex items-center gap-1 text-muted-foreground">
-                            <button
-                              type="button"
-                              onClick={e => {
-                                e.stopPropagation();
-                                handleReorderCategory(index, index - 1);
-                              }}
-                              className="p-1 rounded hover:bg-muted/60"
-                              aria-label="Move up"
+                          <div className="flex items-center justify-between gap-2">
+                            <div
+                              className="flex items-baseline gap-2 rounded-full bg-primary/5 px-3 py-1 text-xs sm:text-sm font-medium text-primary"
+                              title="Auto-calculated from subcategories"
                             >
-                              <ChevronUpIcon />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={e => {
-                                e.stopPropagation();
-                                handleReorderCategory(index, index + 1);
-                              }}
-                              className="p-1 rounded hover:bg-muted/60"
-                              aria-label="Move down"
-                            >
-                              <ChevronDown className="h-4 w-4" />
-                            </button>
+                              <span>{formatCurrency(categoryTotal)}</span>
+                              <span className="text-muted-foreground">{categoryPercent}%</span>
+                            </div>
+                            <div className="hidden sm:flex items-center gap-2 text-sm">
+                              <div className="flex items-center gap-1 text-muted-foreground">
+                                <button
+                                  type="button"
+                                  onClick={e => {
+                                    e.stopPropagation();
+                                    handleReorderCategory(index, index - 1);
+                                  }}
+                                  className="p-1 rounded hover:bg-muted/60"
+                                  aria-label="Move up"
+                                >
+                                  <ChevronUpIcon />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={e => {
+                                    e.stopPropagation();
+                                    handleReorderCategory(index, index + 1);
+                                  }}
+                                  className="p-1 rounded hover:bg-muted/60"
+                                  aria-label="Move down"
+                                >
+                                  <ChevronDown className="h-4 w-4" />
+                                </button>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  handleDeleteCategory(category.id);
+                                }}
+                                className="p-1 rounded-full hover:bg-destructive/10 text-destructive"
+                                aria-label="Delete category"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                              <span className="ml-1 inline-flex h-7 w-7 items-center justify-center rounded-full bg-muted/60 text-muted-foreground">
+                                <GripVertical className="h-4 w-4" />
+                              </span>
+                            </div>
+                            <div className="flex sm:hidden items-center gap-1">
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <button
+                                    type="button"
+                                    onClick={e => e.stopPropagation()}
+                                    className="flex h-8 w-8 items-center justify-center rounded-full bg-muted/60 text-muted-foreground hover:bg-muted"
+                                    aria-label="Category actions"
+                                  >
+                                    <MoreVertical className="h-4 w-4" />
+                                  </button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-40">
+                                  <DropdownMenuItem
+                                    onSelect={event => {
+                                      event.preventDefault();
+                                      handleReorderCategory(index, index - 1);
+                                    }}
+                                  >
+                                    Move up
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    onSelect={event => {
+                                      event.preventDefault();
+                                      handleReorderCategory(index, index + 1);
+                                    }}
+                                  >
+                                    Move down
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    className="text-destructive focus:text-destructive"
+                                    onSelect={event => {
+                                      event.preventDefault();
+                                      handleDeleteCategory(category.id);
+                                    }}
+                                  >
+                                    Delete category
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
                           </div>
-                          <button
-                            type="button"
-                            onClick={e => {
-                              e.stopPropagation();
-                              handleDeleteCategory(category.id);
-                            }}
-                            className="p-1 rounded-full hover:bg-destructive/10 text-destructive"
-                            aria-label="Delete category"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                          <span className="ml-1 inline-flex h-7 w-7 items-center justify-center rounded-full bg-muted/60 text-muted-foreground">
-                            <GripVertical className="h-4 w-4" />
-                          </span>
                         </div>
                       </AccordionTrigger>
                       <AccordionContent className="pb-3">
