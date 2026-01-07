@@ -901,6 +901,7 @@ export const SalaryHistory = ({ userId, refreshTrigger }: SalaryHistoryProps) =>
                             <SelectValue placeholder="Last 3 months" />
                           </SelectTrigger>
                           <SelectContent>
+                            <SelectItem value="all">All time</SelectItem>
                             <SelectItem value="1">Last 1 month</SelectItem>
                             <SelectItem value="3">Last 3 months</SelectItem>
                             <SelectItem value="6">Last 6 months</SelectItem>
